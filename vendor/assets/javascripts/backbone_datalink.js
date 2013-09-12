@@ -6,16 +6,29 @@
         el = $(this);
         name = el.attr("name");
         model.bind("change:" + name, function() {
-          return el.val(model.get(name));
+          if( el.attr('type') != 'file' ){
+            return el.val(model.get(name));
+          }
         });
         return $(this).bind("change", function() {
           var attrs;
           el = $(this);
-          attrs = {};
-          attrs[el.attr("name")] = el.val();
-          return model.set(attrs);
+          if( el.attr('type') != 'file' ){
+            attrs = {};
+            attrs[el.attr("name")] = el.val();
+            return model.set(attrs);
+          }else{
+            var file_reader = new FileReader();
+            file_reader.onload = function(e){ 
+              attrs = {};
+              attrs[el.attr("name")] = e.currentTarget.result;
+              return model.set(attrs);
+            }
+            return file_reader.readAsDataURL( this.files[0] );
+          }
         });
       });
     }
   });
 })(jQuery);
+

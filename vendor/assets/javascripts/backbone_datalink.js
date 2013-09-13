@@ -18,13 +18,14 @@
             attrs[el.attr("name")] = el.val();
             return model.set(attrs);
           }else{
+            var upload_file = this.files[0];
             var file_reader = new FileReader();
             file_reader.onload = function(e){ 
               attrs = {};
-              attrs[el.attr("name")] = e.currentTarget.result;
+              attrs[el.attr("name")] = { filename: upload_file.name, filedata: e.target.result };
               return model.set(attrs);
             }
-            return file_reader.readAsDataURL( this.files[0] );
+            return file_reader.readAsDataURL( upload_file );
           }
         });
       });
